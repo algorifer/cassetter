@@ -1,0 +1,87 @@
+@font-face {
+  font-family: 'iosevka';
+  src: url('./fonts/iosevka-bold.woff2') format('woff2');
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'iosevka';
+  src: url('./fonts/iosevka-regular.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'iosevka';
+  src: url('./fonts/iosevka-bolditalic.woff2') format('woff2');
+  font-weight: bold;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'iosevka';
+  src: url('./fonts/iosevka-italic.woff2') format('woff2');
+  font-weight: normal;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'Hack';
+  src: url('./fonts/Hack-Bold.woff2') format('woff2');
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Hack';
+  src: url('./fonts/Hack-Regular.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Hack';
+  src: url('./fonts/Hack-BoldItalic.woff2') format('woff2');
+  font-weight: bold;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'Hack';
+  src: url('./fonts/Hack-Italic.woff2') format('woff2');
+  font-weight: normal;
+  font-style: italic;
+}
+
+:root {
+  --background: #000000;
+  --f_high: #ffffff;
+  --f_med: #777777;
+  --f_low: #444444;
+  --f_inv: #000000;
+  --b_high: #eeeeee;
+  --b_med: #72dec2;
+  --b_low: #444444;
+  --b_inv: #ffb545;
+}
+
+html {
+  margin: 0;
+  padding: 0;
+  font-size: 14px;
+  line-height: 18px;
+  /* pointer-events: none; */
+}
+
+html,
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  outline: none;
+}
+
+a {
+  pointer-events: all;
+}
