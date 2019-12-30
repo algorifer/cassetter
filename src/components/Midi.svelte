@@ -19,7 +19,7 @@
       const vel = Math.floor((msg.data[2] / 127) * 35);
 
       if (knob === 0) chPlay.play(ch);
-      if (knob <= 7) tapes.msg(ch, knob, vel);
+      tapes.msg(ch, knob, vel);
     }
   };
 

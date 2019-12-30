@@ -51,4 +51,4 @@
     01-60-60m180 30a30 30 0 0130-30 30 30 0 0130 30 30 30 0 01-30 30 30 30 0
     01-30-30m-120 30h150m-120" />
 </svg>
-<span>// granular sampler for ORCA //</span>
+<span>MIDI controlled granular sampler</span>

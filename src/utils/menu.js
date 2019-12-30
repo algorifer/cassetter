@@ -10,12 +10,13 @@ const menuTemplate = () => [
           submenu: [
             {
               label: 'About',
-              click: () => shell.openExternal('https://person0b.itch.io/muthur')
+              click: () =>
+                shell.openExternal('https://person0b.itch.io/cassetter')
             },
             {
               label: 'Source',
               click: () =>
-                shell.openExternal('https://github.com/person0b/Muthur')
+                shell.openExternal('https://github.com/person0b/cassetter')
             },
             {type: 'separator'},
             {role: 'togglefullscreen'},
@@ -33,12 +34,13 @@ const menuTemplate = () => [
           submenu: [
             {
               label: 'About',
-              click: () => shell.openExternal('https://person0b.itch.io/muthur')
+              click: () =>
+                shell.openExternal('https://person0b.itch.io/cassetter')
             },
             {
               label: 'Source',
               click: () =>
-                shell.openExternal('https://github.com/person0b/Muthur')
+                shell.openExternal('https://github.com/person0b/cassetter')
             },
             {type: 'separator'},
             {role: 'togglefullscreen'},
