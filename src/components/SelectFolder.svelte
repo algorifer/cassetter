@@ -13,10 +13,6 @@
     const path = await selectFolder();
     samplesFolder.set(path);
   };
-
-  function onKeydown(e) {
-    if (e.key === `Enter`) onSelectClick();
-  }
 </script>
 
 <style>
@@ -25,8 +21,6 @@
   }
 </style>
 
-<svelte:window on:keydown={onKeydown} />
-
 <Logo />
 <button on:click={onSelectClick}>Select Samples Folder</button>
-<span>(press Enter)</span>
+<span>(press Ctrl or Cmd + f)</span>

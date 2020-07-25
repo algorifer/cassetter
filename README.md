@@ -37,4 +37,13 @@ Other values will stop playback.
 
 Other knobs range from `0` to `z`.
 
+### Hotkey:
+
+- `Ctrl or Cmd + f` - Select the sample folder
+- `Ctrl or Cmd + s` - Save parameters
+- `Ctrl or Cmd + o` - Open a parameter file
+- `Shift + ↑ or ↓` - Channel selection
+- `↑ or ↓` - Selecting a parameter or a sample
+- `← or →` - Change a parameter
+
 ## Issues and review are welcome!

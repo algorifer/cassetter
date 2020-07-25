@@ -1,143 +1,197 @@
-import {writable} from 'svelte/store';
-import Tone from 'tone';
-import getPlayerSetting from '../libs/getPlayerSettings';
+import { writable, get } from 'svelte/store'
+import Tone from 'tone'
+import getPlayerSetting from '../libs/getPlayerSettings'
 import {
   playOnce,
   playLoop,
   playOnceReverse,
   playLoopReverse,
-  stop
-} from '../libs/playModes';
+  stop,
+} from '../libs/playModes'
+import base36 from '../libs/base36'
+import { createPlayer } from '../utils/createPlayer'
 
 const defaultTape = {
   name: null,
   player: null,
   isPlay: false,
-  mode: `.`
-};
+  mode: `.`,
+}
+
+export const samplesFolder = writable(null)
+export const tapes = createTapes()
+
+const delPlayer = (tape) => {
+  if (tape.player) {
+    tape.player.dispose()
+    tape.crusher.dispose()
+    tape.filterHP.dispose()
+    tape.filterLP.dispose()
+    tape.limiter.dispose()
+  }
+}
+
+const createTape = async (name, path) => {
+  const player = await createPlayer(path)
+  const crusher = new Tone.BitCrusher(8)
+  const filterHP = new Tone.Filter(1, 'highpass')
+  const filterLP = new Tone.Filter(10000, 'lowpass')
+  const feedbackDelay = new Tone.FeedbackDelay(0, 0)
+  const limiter = new Tone.Limiter(-20)
+
+  player.loop = true
+  player.connect(crusher)
+  crusher.connect(feedbackDelay)
+  feedbackDelay.connect(filterHP)
+  filterHP.connect(filterLP)
+  filterLP.connect(limiter)
+  limiter.toMaster()
+
+  return {
+    name,
+    player,
+    mode: '.',
+    crusher,
+    filterHP,
+    filterLP,
+    feedbackDelay,
+    limiter,
+    ...getPlayerSetting(player),
+  }
+}
+
+const updateRange = (range, vel, tape) => {
+  const { param, min, max } = range
+  const step = (max - min) / 35
+
+  if (param === 'volume') {
+    tape.player.volume.value = min + step * vel
+  } else {
+    tape.player[param] = min + step * vel
+  }
+
+  return { ...range, value: vel, msgValue: base36[vel] }
+}
+
+const updateEffect = (effect, vel, tape) => {
+  const { param, min, max } = effect
+  const step = (max - min) / 35
+  const value = min + step * vel
+
+  if (param === 'bitCrusher') {
+    tape.crusher.bits = value
+  } else if (param === 'delayTime') {
+    tape.feedbackDelay.delayTime.value = value
+  } else if (param === 'feedback') {
+    tape.feedbackDelay.feedback.value = value
+  } else if (param === 'highpassFilter') {
+    tape.filterHP.frequency.value = value
+  } else if (param === 'lowpassFilter') {
+    tape.filterLP.frequency.value = value
+  }
+
+  return { ...effect, value: vel, msgValue: base36[vel] }
+}
 
 function createTapes() {
-  const {subscribe, set, update} = writable(new Array(16).fill(defaultTape));
+  const { subscribe, set, update } = writable(new Array(16).fill(defaultTape))
 
-  const setPlayer = (id, name, path) => {
-    const player = new Tone.GrainPlayer(path, () => {
-      const crusher = new Tone.BitCrusher(8);
-      const filterHP = new Tone.Filter(1, 'highpass');
-      const filterLP = new Tone.Filter(10000, 'lowpass');
-      const feedbackDelay = new Tone.FeedbackDelay(0, 0);
-      const limiter = new Tone.Limiter(-20);
+  const setPlayer = async (id, name, path) => {
+    const newTape = await createTape(name, path)
 
-      player.loop = true;
-      player.connect(crusher);
-      crusher.connect(feedbackDelay);
-      feedbackDelay.connect(filterHP);
-      filterHP.connect(filterLP);
-      filterLP.connect(limiter);
-      limiter.toMaster();
-
-      update(tapes =>
-        tapes.map((tape, i) => {
-          if (i === id)
-            return {
-              name,
-              player,
-              mode: '.',
-              crusher,
-              filterHP,
-              filterLP,
-              feedbackDelay,
-              limiter,
-              ...getPlayerSetting(player)
-            };
-          return tape;
-        })
-      );
-    });
-  };
+    update((tapes) => tapes.map((tape, i) => (i === id ? newTape : tape)))
+  }
 
   const changeRange = (tape, knob, vel) => {
     const newRanges = tape.ranges.map((range, i) => {
-      if (i !== knob - 1) return range;
-      const step = (range.max - range.min) / 35;
-      if (i === 0) {
-        tape.player.volume.value = range.min + step * vel;
-      } else {
-        tape.player[range.param] = range.min + step * vel;
-      }
-      return {...range, value: vel};
-    });
-    return {...tape, ranges: newRanges};
-  };
+      if (i !== knob - 1) return range
+      return updateRange(range, vel, tape)
+    })
+    return { ...tape, ranges: newRanges }
+  }
 
   const changeEffect = (tape, knob, vel) => {
     const newEffects = tape.effects.map((effect, i) => {
-      if (i !== knob - 8) return effect;
-      const step = (effect.max - effect.min) / 35;
-      const value = effect.min + step * vel;
-      if (i === 0) {
-        tape.crusher.bits = value;
-      } else if (i === 1) {
-        tape.feedbackDelay.delayTime.value = value;
-      } else if (i === 2) {
-        tape.feedbackDelay.feedback.value = value;
-      } else if (i === 3) {
-        tape.filterHP.frequency.value = value;
-      } else if (i === 4) {
-        tape.filterLP.frequency.value = value;
-      }
+      if (i !== knob - 8) return effect
+      return updateEffect(effect, vel, tape)
+    })
 
-      return {...effect, value: vel};
-    });
-
-    return {...tape, effects: newEffects};
-  };
+    return { ...tape, effects: newEffects }
+  }
 
   const msg = (ch, knob, vel) =>
-    update(tapes =>
+    update((tapes) =>
       tapes.map((tape, i) => {
-        if (ch !== i || !tape.player) return tape;
+        if (ch !== i || !tape.player) return tape
         if (knob === 0) {
           if (vel === 24) {
-            playOnce(tape);
+            playOnce(tape)
           } else if (vel === 21) {
-            playLoop(tape);
+            playLoop(tape)
           } else if (vel === 27) {
-            playOnceReverse(tape);
+            playOnceReverse(tape)
           } else if (vel === 26) {
-            playLoopReverse(tape);
+            playLoopReverse(tape)
           } else {
-            stop(tape);
+            stop(tape)
           }
-          return tape;
+          return tape
         }
-        if (knob > 0 && knob <= 7) return changeRange(tape, knob, vel);
-        if (knob > 7 && knob <= 12) return changeEffect(tape, knob, vel);
-        return tape;
+        if (knob > 0 && knob <= 7) return changeRange(tape, knob, vel)
+        if (knob > 7 && knob <= 12) return changeEffect(tape, knob, vel)
+        return tape
       })
-    );
+    )
 
-  const del = ch =>
-    update(tapes =>
+  const del = (ch) =>
+    update((tapes) =>
       tapes.map((tape, i) => {
         if (i === ch) {
-          tape.player.dispose();
-          tape.crusher.dispose();
-          tape.filterHP.dispose();
-          tape.filterLP.dispose();
-          tape.limiter.dispose();
-          return defaultTape;
+          delPlayer(tape)
+          return defaultTape
         }
-        return tape;
+        return tape
       })
-    );
+    )
+
+  const openSetting = async (settings) => {
+    const folder = get(samplesFolder)
+    const newTapes = new Array(16).fill(defaultTape)
+
+    for (let i = 0; i < settings.length; i++) {
+      const setting = settings[i]
+      if (setting !== null) {
+        const newTape = await createTape(
+          setting.name,
+          `${folder}/${setting.name}.wav`
+        )
+
+        newTape.ranges = newTape.ranges.map((range) => {
+          const vel = base36.indexOf(setting.ranges[range.param])
+
+          if (vel < 0) return range
+          return updateRange(range, vel, newTape)
+        })
+
+        newTape.effects = newTape.effects.map((effect) => {
+          const vel = base36.indexOf(setting.effects[effect.param])
+
+          if (vel < 0) return effect
+          return updateEffect(effect, vel, newTape)
+        })
+
+        newTapes[i] = newTape
+      }
+    }
+
+    set(newTapes)
+  }
 
   return {
+    openSetting,
     subscribe,
     setPlayer,
     msg,
-    del
-  };
+    del,
+  }
 }
-
-export const samplesFolder = writable(null);
-export const tapes = createTapes();

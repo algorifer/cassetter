@@ -1,85 +1,102 @@
-export default player => ({
+export default (player) => ({
   ranges: [
     {
       label: 'Volume',
       param: 'volume',
       min: -80,
       max: 0,
-      value: 35
+      value: 35,
+      msgValue: 'z',
     },
     {
       label: 'Grain Size',
       param: 'grainSize',
       min: 0.01,
       max: 0.5,
-      value: 13
+      value: 13,
+      msgValue: 'd',
     },
     {
       label: 'Playback Rate',
       param: 'playbackRate',
       min: 0.5,
       max: 2,
-      value: 11
+      value: 11,
+      msgValue: 'b',
     },
     {
       label: 'Detune',
       param: 'detune',
       min: -1200,
       max: 1200,
-      value: 18
+      value: 18,
+      msgValue: 'i',
     },
     {
       label: 'Overlap',
       param: 'overlap',
       min: 0.01,
       max: 0.2,
-      value: 17
+      value: 17,
+      msgValue: 'h',
     },
     {
       label: 'Loop Start',
       param: 'loopStart',
       min: 0,
       max: player.buffer.duration,
-      value: 0
+      value: 0,
+      msgValue: '0',
     },
     {
       label: 'Loop End',
       param: 'loopEnd',
       min: 0,
       max: player.buffer.duration,
-      value: 0
-    }
+      value: 0,
+      msgValue: '0',
+    },
   ],
   effects: [
     {
       label: 'Bit Crusher',
+      param: 'bitCrusher',
       min: 0,
       max: 8,
-      value: 35
+      value: 35,
+      msgValue: 'z',
     },
     {
       label: 'Delay Time',
+      param: 'delayTime',
       min: 0,
       max: 1,
-      value: 0
+      value: 0,
+      msgValue: '0',
     },
     {
       label: 'Feedback',
+      param: 'feedback',
       min: 0,
       max: 1,
-      value: 0
+      value: 0,
+      msgValue: '0',
     },
     {
       label: 'Highpass Filter',
+      param: 'highpassFilter',
       min: 0,
       max: 10000,
-      value: 0
+      value: 0,
+      msgValue: '0',
     },
     {
       label: 'Lowpass Filter',
+      param: 'lowpassFilter',
       min: 0,
       max: 10000,
-      value: 35
-    }
-  ]
-});
+      value: 35,
+      msgValue: '0',
+    },
+  ],
+})

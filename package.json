@@ -1,6 +1,6 @@
 {
   "name": "cassetter",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "UPD granular sampler",
   "main": "main.js",
   "scripts": {

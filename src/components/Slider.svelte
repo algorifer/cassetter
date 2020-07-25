@@ -16,8 +16,8 @@
 
   $: value = range ? range.value : effect.value;
   $: label = range ? range.label : effect.label;
+  $: vel = range ? range.msgValue : effect.msgValue;
 
-  $: vel = base36[value];
   $: sliderArr = sliderArr.map((s, i) => (i <= value ? "|" : "."));
 
   $: if ($currentKnob === knob && input) input.focus();

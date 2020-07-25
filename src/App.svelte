@@ -1,6 +1,14 @@
 <script>
+  // Utils
+  import createMenu from "./utils/menu";
+
   // Components
   import Layout from "./components/Layout.svelte";
+
+  // Stores
+  import { samplesFolder } from "./stores/tapes";
+
+  $: createMenu($samplesFolder !== null);
 </script>
 
 <style type="text/scss">
