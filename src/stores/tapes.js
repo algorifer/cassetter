@@ -157,34 +157,30 @@ function createTapes() {
   const openSetting = async (settings) => {
     const folder = get(samplesFolder)
     const newTapes = new Array(16).fill(defaultTape)
+    set(newTapes)
 
     for (let i = 0; i < settings.length; i++) {
       const setting = settings[i]
       if (setting !== null) {
-        const newTape = await createTape(
-          setting.name,
-          `${folder}/${setting.name}.wav`
-        )
+        await setPlayer(i, setting.name, `${folder}/${setting.name}.wav`)
 
-        newTape.ranges = newTape.ranges.map((range) => {
-          const vel = base36.indexOf(setting.ranges[range.param])
+        Object.entries(setting.ranges).forEach(([name, value], kn) => {
+          const vel = base36.indexOf(value)
 
-          if (vel < 0) return range
-          return updateRange(range, vel, newTape)
+          if (vel >= 0) {
+            msg(i, kn + 1, vel)
+          }
         })
 
-        newTape.effects = newTape.effects.map((effect) => {
-          const vel = base36.indexOf(setting.effects[effect.param])
+        Object.entries(setting.effects).forEach(([name, value], kn) => {
+          const vel = base36.indexOf(value)
 
-          if (vel < 0) return effect
-          return updateEffect(effect, vel, newTape)
+          if (vel >= 0) {
+            msg(i, kn + 8, vel)
+          }
         })
-
-        newTapes[i] = newTape
       }
     }
-
-    set(newTapes)
   }
 
   return {

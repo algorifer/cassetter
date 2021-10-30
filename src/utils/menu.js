@@ -1,5 +1,5 @@
 // Electron
-const { app, Menu } = require('electron').remote
+const { app, Menu } = require('@electron/remote');
 const shell = require('electron').shell
 
 import selectFolder from '../libs/selectFolder'
@@ -10,17 +10,17 @@ import { open } from './open'
 const createSubmenu = (isFolder) => [
   ...(isFolder
     ? [
-        {
-          label: 'Save',
-          click: save,
-          accelerator: 'CmdOrCtrl+s',
-        },
-        {
-          label: 'Open',
-          click: open,
-          accelerator: 'CmdOrCtrl+o',
-        },
-      ]
+      {
+        label: 'Save',
+        click: save,
+        accelerator: 'CmdOrCtrl+s',
+      },
+      {
+        label: 'Open',
+        click: open,
+        accelerator: 'CmdOrCtrl+o',
+      },
+    ]
     : []),
   {
     label: 'Folder',
@@ -51,17 +51,17 @@ const createSubmenu = (isFolder) => [
 const menuTemplate = (isFolder) => [
   ...(process.platform === 'darwin'
     ? [
-        {
-          label: app.getName(),
-          submenu: createSubmenu(isFolder),
-        },
-      ]
+      {
+        label: app.getName(),
+        submenu: createSubmenu(isFolder),
+      },
+    ]
     : [
-        {
-          label: 'File',
-          submenu: createSubmenu(isFolder),
-        },
-      ]),
+      {
+        label: 'File',
+        submenu: createSubmenu(isFolder),
+      },
+    ]),
 ]
 
 export default (isFolder) =>

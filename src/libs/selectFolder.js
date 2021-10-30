@@ -1,4 +1,4 @@
-const {dialog, app} = require('electron').remote;
+const { dialog, app } = require('@electron/remote');
 
 export default async () => {
   const paths = await dialog.showOpenDialog(app.win, {

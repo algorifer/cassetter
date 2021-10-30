@@ -1,4 +1,4 @@
-const { dialog } = require('electron').remote
+const { dialog } = require('@electron/remote');
 const fs = require('fs')
 
 import { tapes } from '../stores/tapes'

@@ -1,12 +1,13 @@
-const {app, BrowserWindow, webFrame, Menu} = require('electron');
+const { app, BrowserWindow } = require('electron');
 const path = require('path');
-const url = require('url');
 const shell = require('electron').shell;
 
 let isShown = true;
 
+require('@electron/remote/main').initialize()
+
 require('electron').protocol.registerSchemesAsPrivileged([
-  {scheme: 'js', privileges: {standard: true, secure: true}}
+  { scheme: 'js', privileges: { standard: true, secure: true } }
 ]);
 
 app.win = null;
@@ -34,10 +35,13 @@ app.on('ready', () => {
     webPreferences: {
       zoomFactor: 1.0,
       nodeIntegration: true,
-      backgroundThrottling: false
+      enableRemoteModule: true,
+      contextIsolation: false,
+      backgroundThrottling: false,
     }
   });
 
+  require("@electron/remote/main").enable(app.win.webContents);
   // app.win.loadURL(path.join(__dirname, 'public', 'index.html'));
   app.win.loadFile(`public/index.html`);
 
@@ -64,19 +68,19 @@ app.on('ready', () => {
   });
 });
 
-app.inspect = function() {
+app.inspect = function () {
   app.win.toggleDevTools();
 };
 
-app.toggleMenubar = function() {
+app.toggleMenubar = function () {
   app.win.setMenuBarVisibility(!app.win.isMenuBarVisible());
 };
 
-app.toggleFullscreen = function() {
+app.toggleFullscreen = function () {
   app.win.setFullScreen(!app.win.isFullScreen());
 };
 
-app.toggleVisible = function() {
+app.toggleVisible = function () {
   if (process.platform === 'darwin') {
     if (isShown && !app.win.isFullScreen()) {
       app.win.hide();
