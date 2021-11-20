@@ -15,6 +15,6 @@ install:
   - yarn
 
 build_script:
-  - yarn package-mac
+  - yarn package-win
 
 test: off

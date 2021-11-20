@@ -10,7 +10,7 @@
     "start": "sirv public",
     "start:dev": "sirv public --dev",
     "package-mac": "npm run build && electron-builder build --mac --publish never",
-    "package-win": "npm run build && electron-builder build --win --publish never",
+    "package-win": "electron-builder build --win --publish never",
     "package-linux": "npm run build && electron-builder build --linux --publish never"
   },
   "author": "person0b",
@@ -63,7 +63,8 @@
       ]
     },
     "win": {
-      "icon": "public/icon.ico"
+      "icon": "public/icon.ico",
+      "target": "portable"
     },
     "directories": {
       "output": "dist"
