@@ -63,8 +63,7 @@
       ]
     },
     "win": {
-      "icon": "public/icon.ico",
-      "target": "portable"
+      "icon": "public/icon.ico"
     },
     "directories": {
       "output": "dist"
