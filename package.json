@@ -9,9 +9,9 @@
     "dev": "concurrently \"run-p start:dev autobuild\" \"electron .\"",
     "start": "sirv public",
     "start:dev": "sirv public --dev",
-    "package-mac": "npm run build && electron-builder build --mac --publish never",
-    "package-win": "electron-builder build --win --publish never",
-    "package-linux": "npm run build && electron-builder build --linux --publish never"
+    "package-mac": "electron-builder build --mac --publish never",
+    "package-win": "electron-builder build --win --x64 --publish never",
+    "package-linux": "electron-builder build --linux --x64 --publish never"
   },
   "author": "person0b",
   "license": "ISC",
